@@ -146,6 +146,41 @@ Agent: Creates a tool using the remembered lighting pin instead of asking you to
         </section>
 
         <section class="section">
+          <h2>Method B Walkthrough (Step By Step)</h2>
+          <p>Example: add a firmware tool named <code>relay_status</code>.</p>
+          <ol>
+            <li>Create a handler in <code>main/tools_*.c</code> with the standard signature.</li>
+          </ol>
+          <pre>// main/tools_relay.c
+bool tools_relay_status_handler(const cJSON *input, char *result, size_t result_len)
+{
+    (void)input;
+    snprintf(result, result_len, "Relay status: healthy");
+    return true;
+}</pre>
+          <ol start="2">
+            <li>Declare the handler in <code>main/tools_handlers.h</code>.</li>
+          </ol>
+          <pre>bool tools_relay_status_handler(const cJSON *input, char *result, size_t result_len);</pre>
+          <ol start="3">
+            <li>Register it in <code>main/builtin_tools.def</code> so the model can discover and call it.</li>
+          </ol>
+          <pre>TOOL_ENTRY("relay_status",
+           "Get relay health from host web relay.",
+           "{\"type\":\"object\",\"properties\":{}}",
+           tools_relay_status_handler)</pre>
+          <ol start="4">
+            <li>Add host coverage in <code>test/host/</code> for input validation and expected output shape.</li>
+            <li>Build and run through the normal firmware flow.</li>
+          </ol>
+          <pre>./scripts/test.sh host
+./scripts/build.sh
+./scripts/flash.sh --kill-monitor /dev/cu.usbmodem1101
+./scripts/monitor.sh /dev/cu.usbmodem1101</pre>
+          <p class="inline-note">Treat <code>name</code>, <code>description</code>, and JSON schema as a model-facing API contract. Change deliberately and keep tests aligned.</p>
+        </section>
+
+        <section class="section">
           <h2>How To Choose</h2>
           <ul>
             <li>Choose Approach 1 if existing built-in tools can express the behavior.</li>
