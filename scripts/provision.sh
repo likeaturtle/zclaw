@@ -348,13 +348,84 @@ source_idf_env() {
 
 default_model_for_backend() {
     case "$1" in
-        anthropic) echo "claude-sonnet-4-5" ;;
-        openai) echo "gpt-5.2" ;;
-        openrouter) echo "minimax/minimax-m2.5" ;;
+        anthropic) echo "claude-sonnet-4-6" ;;
+        openai) echo "gpt-5.4" ;;
+        openrouter) echo "openrouter/auto" ;;
         ollama) echo "qwen3:8b" ;;
         volcengine) echo "doubao-1-5-pro-32k-250115" ;;
-        *) echo "claude-sonnet-4-5" ;;
+        *) echo "claude-sonnet-4-6" ;;
     esac
+}
+
+MODEL_MENU_LABELS=()
+MODEL_MENU_VALUES=()
+
+load_model_menu_for_backend() {
+    MODEL_MENU_LABELS=()
+    MODEL_MENU_VALUES=()
+
+    case "$1" in
+        anthropic)
+            MODEL_MENU_LABELS=("claude-sonnet-4-6 (default)" "claude-haiku-4-5" "claude-opus-4-6" "Other model ID")
+            MODEL_MENU_VALUES=("claude-sonnet-4-6" "claude-haiku-4-5" "claude-opus-4-6" "__custom__")
+            ;;
+        openai)
+            MODEL_MENU_LABELS=("gpt-5.4 (default)" "gpt-5-mini" "gpt-4.1-mini" "Other model ID")
+            MODEL_MENU_VALUES=("gpt-5.4" "gpt-5-mini" "gpt-4.1-mini" "__custom__")
+            ;;
+        openrouter)
+            MODEL_MENU_LABELS=("openrouter/auto (default)" "openai/gpt-5.2" "openai/gpt-5-mini" "anthropic/claude-sonnet-4.6" "anthropic/claude-haiku-4.5" "Other model ID")
+            MODEL_MENU_VALUES=("openrouter/auto" "openai/gpt-5.2" "openai/gpt-5-mini" "anthropic/claude-sonnet-4.6" "anthropic/claude-haiku-4.5" "__custom__")
+            ;;
+        ollama)
+            MODEL_MENU_LABELS=("qwen3:8b (default)" "Other model ID")
+            MODEL_MENU_VALUES=("qwen3:8b" "__custom__")
+            ;;
+        *)
+            MODEL_MENU_LABELS=("Other model ID")
+            MODEL_MENU_VALUES=("__custom__")
+            ;;
+    esac
+}
+
+prompt_for_model() {
+    local backend="$1"
+    local default_model="$2"
+    local choice=""
+    local index
+    local selected
+
+    load_model_menu_for_backend "$backend"
+
+    while true; do
+        echo "Select model for $backend:"
+        for ((index = 0; index < ${#MODEL_MENU_LABELS[@]}; index++)); do
+            echo "  $((index + 1)). ${MODEL_MENU_LABELS[$index]}"
+        done
+        read -r -p "Choice [1-${#MODEL_MENU_VALUES[@]}] (default: 1): " choice
+        choice="${choice:-1}"
+
+        if [[ ! "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt "${#MODEL_MENU_VALUES[@]}" ]; then
+            echo "Invalid selection."
+            continue
+        fi
+
+        selected="${MODEL_MENU_VALUES[$((choice - 1))]}"
+        if [ "$selected" != "__custom__" ]; then
+            MODEL="$selected"
+            return 0
+        fi
+
+        while true; do
+            read -r -p "Model ID (default: $default_model): " selected
+            selected="${selected:-$default_model}"
+            if [ -n "$selected" ]; then
+                MODEL="$selected"
+                return 0
+            fi
+            echo "Model ID is required."
+        done
+    done
 }
 
 validate_backend() {
@@ -1019,7 +1090,12 @@ if ! validate_backend "$BACKEND"; then
 fi
 
 if [ -z "$MODEL" ]; then
-    MODEL="$(default_model_for_backend "$BACKEND")"
+    DEFAULT_MODEL="$(default_model_for_backend "$BACKEND")"
+    if [ "$ASSUME_YES" = true ]; then
+        MODEL="$DEFAULT_MODEL"
+    else
+        prompt_for_model "$BACKEND" "$DEFAULT_MODEL"
+    fi
 fi
 
 if [ "$BACKEND" = "ollama" ]; then

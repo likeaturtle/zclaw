@@ -66,7 +66,7 @@ ZCLAW_PORT=/dev/cu.usbmodem1101
 ZCLAW_WIFI_SSID=YourWifi
 ZCLAW_WIFI_PASS=YourWifiPassword
 ZCLAW_BACKEND=openai
-ZCLAW_MODEL=gpt-5.2
+ZCLAW_MODEL=gpt-5.4
 ZCLAW_API_URL=
 
 # Prefer setting one API key here:

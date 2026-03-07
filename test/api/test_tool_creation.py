@@ -18,7 +18,7 @@ import argparse
 import httpx
 
 API_URL = "https://api.anthropic.com/v1/messages"
-MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-5")
+MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-6")
 
 SYSTEM_PROMPT = """You are zclaw, an AI agent running on an ESP32 microcontroller. \
 You have 400KB of RAM and run on bare metal with FreeRTOS. \

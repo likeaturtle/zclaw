@@ -40,7 +40,7 @@ class QemuLiveLlmBridgeTests(unittest.TestCase):
     def test_detect_provider_from_anthropic_shape(self) -> None:
         request = json.dumps(
             {
-                "model": "claude-sonnet-4-5",
+                "model": "claude-sonnet-4-6",
                 "system": "You are helpful.",
                 "messages": [{"role": "user", "content": "hi"}],
                 "tools": [

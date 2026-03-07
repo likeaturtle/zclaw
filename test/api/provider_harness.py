@@ -230,7 +230,7 @@ PROVIDERS = {
     "anthropic": ProviderConfig(
         name="anthropic",
         api_url="https://api.anthropic.com/v1/messages",
-        default_model="claude-sonnet-4-5",
+        default_model="claude-sonnet-4-6",
         model_env="ANTHROPIC_MODEL",
         api_key_env="ANTHROPIC_API_KEY",
         wire_format="anthropic",
@@ -238,7 +238,7 @@ PROVIDERS = {
     "openai": ProviderConfig(
         name="openai",
         api_url="https://api.openai.com/v1/chat/completions",
-        default_model="gpt-5.2",
+        default_model="gpt-5.4",
         model_env="OPENAI_MODEL",
         api_key_env="OPENAI_API_KEY",
         wire_format="openai",
@@ -246,7 +246,7 @@ PROVIDERS = {
     "openrouter": ProviderConfig(
         name="openrouter",
         api_url="https://openrouter.ai/api/v1/chat/completions",
-        default_model="minimax/minimax-m2.5",
+        default_model="openrouter/auto",
         model_env="OPENROUTER_MODEL",
         api_key_env="OPENROUTER_API_KEY",
         wire_format="openai",

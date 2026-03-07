@@ -8,6 +8,36 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 
 - No unreleased changes yet.
 
+## [2.11.1] - 2026-03-07
+
+### Fixed
+- Serialized Telegram and LLM HTTPS usage on classic `esp32` targets to reduce TLS/memory contention that could cause OpenAI-backed turns to fail before or between tool rounds.
+- Agent turns now pause new Telegram long-polls while an LLM/tool exchange is active, preventing `getUpdates` from preempting follow-up model requests mid-turn.
+
+### Docs
+- Updated README and docs-site support matrix copy to explicitly list classic `ESP32`, `ESP32-WROOM`, and `ESP32 DevKit` support.
+
+### Tests
+- Added host coverage for Telegram poll pause/resume behavior around successful and failed LLM turns.
+- Added host coverage for classic ESP32 Telegram poll-timeout selection.
+
+## [2.11.0] - 2026-03-07
+
+### Fixed
+- On classic `esp32` targets, boot now skips factory-reset button setup when the configured pin is unsafe for runtime input use, preventing startup crashes on boards that still map the reset button default onto flash-reserved pins such as `GPIO9`.
+
+### Changed
+- `provision.sh` now offers curated backend-specific model menus for interactive provisioning, so common OpenAI, Anthropic, OpenRouter, and Ollama choices no longer require typing exact model IDs.
+- Updated default backend models to `gpt-5.4` (OpenAI), `claude-sonnet-4-6` (Anthropic), and `openrouter/auto` (OpenRouter).
+- Updated local provisioning profile templates and runtime/test defaults to match the new model selections.
+
+### Docs
+- Updated Getting Started and full reference docs for the curated provisioning flow and refreshed default model guidance.
+
+### Tests
+- Added host coverage for interactive provisioning model-menu paths, including default, curated, custom, and Ollama endpoint-normalization flows.
+- Added host coverage for the classic ESP32 runtime factory-reset pin safety guard.
+
 ## [2.10.3] - 2026-03-05
 
 ### Fixed

@@ -49,8 +49,9 @@ Agent: Done. GPIO2 is now off.
 
 ## Hardware
 
-Tested targets are **ESP32-C3**, **ESP32-S3**, and **ESP32-C6**.
-Other ESP32 variants should work fine (some may require manual ESP-IDF target setup):
+Tested targets are **ESP32**, **ESP32-C3**, **ESP32-S3**, and **ESP32-C6**.
+Classic ESP32-WROOM/DevKit (`esp32` target) is supported and tested. Other ESP32
+variants may work too (some may require manual ESP-IDF target setup):
 
 - Default GPIO tool pin limits are configured for ESP32-C3 dev workflows (`GPIO 2-10`).
 - On classic ESP32-WROOM/DevKit (`esp32` target), runtime guardrails block GPIO6-11 because those pins are wired to SPI flash/PSRAM.
@@ -475,9 +476,9 @@ Reset options:
 Edit `main/config.h` to customize:
 
 ```c
-#define LLM_DEFAULT_MODEL_ANTHROPIC "claude-sonnet-4-5"   // Anthropic default
-#define LLM_DEFAULT_MODEL_OPENAI    "gpt-5.2"             // OpenAI default
-#define LLM_DEFAULT_MODEL_OPENROUTER "minimax/minimax-m2.5" // OpenRouter default
+#define LLM_DEFAULT_MODEL_ANTHROPIC "claude-sonnet-4-6"   // Anthropic default
+#define LLM_DEFAULT_MODEL_OPENAI    "gpt-5.4"             // OpenAI default
+#define LLM_DEFAULT_MODEL_OPENROUTER "openrouter/auto"      // OpenRouter default
 #define LLM_DEFAULT_MODEL_OLLAMA    "qwen3:8b"            // Ollama default
 #define LLM_MAX_TOKENS 1024                   // Max response tokens
 #define MAX_HISTORY_TURNS 8                   // Conversation history length

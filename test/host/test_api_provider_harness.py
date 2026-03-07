@@ -26,12 +26,12 @@ SPEC.loader.exec_module(provider_harness)
 
 class ProviderHarnessTests(unittest.TestCase):
     def test_openai_gpt5_uses_max_completion_tokens(self) -> None:
-        field, value = provider_harness._openai_like_max_tokens_field("gpt-5.2")
+        field, value = provider_harness._openai_like_max_tokens_field("gpt-5.4")
         self.assertEqual(field, "max_completion_tokens")
         self.assertEqual(value, 1024)
 
     def test_openai_non_gpt5_uses_max_tokens(self) -> None:
-        field, value = provider_harness._openai_like_max_tokens_field("gpt-4o-mini")
+        field, value = provider_harness._openai_like_max_tokens_field("gpt-4.1-mini")
         self.assertEqual(field, "max_tokens")
         self.assertEqual(value, 1024)
 
@@ -128,7 +128,7 @@ class ProviderHarnessTests(unittest.TestCase):
             return response
 
         with patch.object(provider_harness, "httpx", SimpleNamespace(post=fake_post)):
-            result = provider_harness.call_api(provider, messages, "test-key", "gpt-4o-mini", user_tools=[])
+            result = provider_harness.call_api(provider, messages, "test-key", "gpt-4.1-mini", user_tools=[])
 
         self.assertEqual(result, {"ok": True})
         self.assertEqual(payload["url"], provider.api_url)
@@ -157,7 +157,7 @@ class ProviderHarnessTests(unittest.TestCase):
             return response
 
         with patch.object(provider_harness, "httpx", SimpleNamespace(post=fake_post)):
-            provider_harness.call_api(provider, messages, "test-key", "gpt-4o-mini", user_tools=[])
+            provider_harness.call_api(provider, messages, "test-key", "gpt-4.1-mini", user_tools=[])
 
         request_json = payload["json"]
         self.assertEqual(request_json["messages"], messages)

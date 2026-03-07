@@ -57,9 +57,9 @@ typedef enum {
 #define LLM_API_URL_OLLAMA       "http://127.0.0.1:11434/v1/chat/completions"
 #define LLM_API_URL_VOLCENGINE   "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
 
-#define LLM_DEFAULT_MODEL_ANTHROPIC   "claude-sonnet-4-5"
-#define LLM_DEFAULT_MODEL_OPENAI      "gpt-5.2"
-#define LLM_DEFAULT_MODEL_OPENROUTER  "minimax/minimax-m2.5"
+#define LLM_DEFAULT_MODEL_ANTHROPIC   "claude-sonnet-4-6"
+#define LLM_DEFAULT_MODEL_OPENAI      "gpt-5.4"
+#define LLM_DEFAULT_MODEL_OPENROUTER  "openrouter/auto"
 #define LLM_DEFAULT_MODEL_OLLAMA      "qwen3:8b"
 #define LLM_DEFAULT_MODEL_VOLCENGINE  "doubao-1-5-pro-32k-250115"
 
@@ -146,6 +146,9 @@ typedef enum {
 // OpenRouter can require tighter heap headroom during TLS setup on small targets.
 // Use a shorter Telegram long-poll window only for that backend to reduce overlap.
 #define TELEGRAM_POLL_TIMEOUT_OPENROUTER 8
+// Classic ESP32 can exhaust/fragment heap when Telegram long-poll TLS overlaps with
+// outbound LLM HTTPS on the same device. Keep poll windows shorter on that target.
+#define TELEGRAM_POLL_TIMEOUT_ESP32 5
 #define TELEGRAM_POLL_INTERVAL  100     // ms between poll attempts on error
 #define TELEGRAM_MAX_MSG_LEN    4096    // Max message length
 #define TELEGRAM_FLUSH_ON_START 1       // Drop stale pending updates at startup
